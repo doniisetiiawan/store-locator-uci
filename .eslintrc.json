@@ -19,6 +19,7 @@
     "import/no-dynamic-require": "off",
     "global-require": "off",
     "eqeqeq": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "no-underscore-dangle": "warn"
   }
 }

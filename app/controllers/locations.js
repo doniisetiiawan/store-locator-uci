@@ -37,3 +37,31 @@ router.post('/locations', (req, res) => {
     res.status(200).json(item);
   });
 });
+
+router.post('/nearme', (req, res) => {
+  const limit = req.body.limit || 10;
+
+  const maxDistance = req.body.distance || 10;
+
+  const coords = [];
+  coords[0] = parseFloat(req.body.longitude);
+  coords[1] = parseFloat(req.body.latitude);
+
+  Location.find({
+    coordinates: {
+      $near: {
+        type: 'Point',
+        coordinates: coords,
+      },
+      $maxDistance: maxDistance * 1609.34,
+      spherical: true,
+    },
+  })
+    .limit(limit)
+    .exec((err, stores) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+      res.status(200).json(stores);
+    });
+});
