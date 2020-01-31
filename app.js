@@ -1,8 +1,30 @@
 const express = require('express');
+const glob = require('glob');
+const mongoose = require('mongoose');
+const config = require('./config/config');
 
+mongoose.connect(config.db, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on('error', () => {
+  throw new Error(
+    `unable to connect to database at ${config.db}`,
+  );
+});
+
+const models = glob.sync(`${config.root}/app/models/*.js`);
+models.forEach((model) => {
+  require(model);
+});
 const app = express();
-const port = 3000;
 
-app.get('/', (req, res) => res.send('Hello World!'));
+require('./config/express')(app, config);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(config.port, () => {
+  console.log(
+    `Express server listening on port ${config.port}`,
+  );
+});

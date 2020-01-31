@@ -16,14 +16,13 @@ router.get('/locations', (req, res, next) => {
   });
 });
 
-router.get('/locations/add', (req, res) => {
-  res.send('Insert Locations');
-});
-
 router.post('/locations', (req, res) => {
   const loc = {
     title: req.body.title,
-    coordinates: [req.body.long, req.body.lat],
+    coordinates: [
+      parseFloat(req.body.long),
+      parseFloat(req.body.lat),
+    ],
   };
 
   const locations = new Location(loc);
